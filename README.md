@@ -2,7 +2,7 @@
 
 > Don't worry about your cache, nachocache got you!
 
-<img src="logo.svg" width=150 height=150 />
+<img src="public/logo.svg" width=150 height=150 />
 
 API:
 
