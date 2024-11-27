@@ -1,0 +1,13 @@
+name = "codefromanywhere_nachocache_main"
+main = "main.ts"
+compatibility_date = "2024-10-11"
+assets = { directory= "./public" }
+
+routes = [
+  { pattern = "nachocache.com", custom_domain = true },
+  { pattern = "www.nachocache.com", custom_domain = true }
+]
+
+[[kv_namespaces]]
+binding = "cache"
+id = "fee72307bb204445b2e2a5ddece81872"

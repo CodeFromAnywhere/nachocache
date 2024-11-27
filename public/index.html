@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌮 Nacho Cache - Don't worry about your cache!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-5deg);
+            }
+
+            75% {
+                transform: rotate(5deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .shake-animation {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-orange-100 to-yellow-200 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <div class="mb-8">
+                <img width="100" height="100" src="logo.svg" alt="Nacho Cache Logo" class="mx-auto float-animation">
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold text-orange-600 mb-4">
+                Nacho Cache
+            </h1>
+            <p class="text-xl md:text-2xl text-orange-800 mb-8">
+                Don't worry about your cache, nachocache got you! 🌮
+            </p>
+        </div>
+
+        <!-- Demo Section -->
+        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-6 mb-16">
+            <h2 class="text-2xl font-bold text-orange-600 mb-4">Try it out!</h2>
+            <div class="space-y-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="url" id="urlInput" placeholder="Enter your URL"
+                        class="flex-1 p-3 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <select id="maxAge"
+                        class="p-3 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="1m">1 month</option>
+                        <option value="1w">1 week</option>
+                        <option value="1d">1 day</option>
+                        <option value="1h">1 hour</option>
+                    </select>
+                    <button onclick="generateUrl()"
+                        class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200">
+                        Generate
+                    </button>
+                </div>
+                <div id="result" class="hidden">
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <p class="text-sm text-orange-800 mb-2">Your Nacho Cache URL:</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="cachedUrl" readonly
+                                class="flex-1 p-3 bg-white border border-orange-300 rounded-lg">
+                            <button onclick="copyUrl()"
+                                class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div
+                class="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+                <h3 class="text-xl font-bold text-orange-600 mb-3">⚡️ Lightning Fast</h3>
+                <p class="text-orange-800">Load your content in milliseconds instead of seconds. First load: 5s, after
+                    that: 10ms for up to 30 days!</p>
+            </div>
+            <div
+                class="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
+                <h3 class="text-xl font-bold text-orange-600 mb-3">💰 Cost Effective</h3>
+                <p class="text-orange-800">Pay only once per month per URL. Rest of the requests cost just 2x Cloudflare
+                    R2 pricing.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateUrl() {
+            const url = document.getElementById('urlInput').value;
+            const maxAge = document.getElementById('maxAge').value;
+            if (!url) return;
+
+            const cachedUrl = `https://nachocache.com/${maxAge}/${url}`;
+            document.getElementById('cachedUrl').value = cachedUrl;
+            document.getElementById('result').classList.remove('hidden');
+
+            // Add shake animation to result
+            const result = document.getElementById('result');
+            result.classList.add('shake-animation');
+            setTimeout(() => result.classList.remove('shake-animation'), 500);
+        }
+
+        function copyUrl() {
+            const cachedUrl = document.getElementById('cachedUrl');
+            cachedUrl.select();
+            document.execCommand('copy');
+
+            // Visual feedback
+            const copyBtn = event.target;
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            copyBtn.classList.add('bg-green-500');
+
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.classList.remove('bg-green-500');
+            }, 1500);
+        }
+
+        // Add input validation
+        document.getElementById('urlInput').addEventListener('input', (e) => {
+            const input = e.target;
+            const url = input.value;
+
+            try {
+                new URL(url);
+                input.classList.remove('border-red-500');
+                input.classList.add('border-orange-300');
+            } catch {
+                if (url) {
+                    input.classList.remove('border-orange-300');
+                    input.classList.add('border-red-500');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
