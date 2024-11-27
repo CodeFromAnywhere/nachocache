@@ -22,7 +22,7 @@ With nachocache:
 
 - 🟠 implement chatcompletions.com
 - 🟠 implement nachocache.com using a kv with a timeout
-- use https://chatcompletions.com/from/nachocache.com/1m/r.jina.ai/firecrawl.dev/blog/base/anthropic.actionschema.com/model/claude-3-5-sonnet-20241022/prompt/respond%20with%20a%20string%20array%20of%20all%20blog%20URLs%20in%20a%20JSON%20codeblock/output.json
+- Ensure [this](https://chatcompletions.com/from/nachocache.com/1m/r.jina.ai/firecrawl.dev/blog/base/anthropic.actionschema.com/model/claude-3-5-sonnet-20241022/prompt/respond%20with%20a%20string%20array%20of%20all%20blog%20URLs%20in%20a%20JSON%20codeblock/output.json) magically returns a list of blogs as JSON, and is fast.
 - make this work in extexe
 
 ## Time Indication Specification for Nacho Cache
