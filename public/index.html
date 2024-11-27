@@ -70,6 +70,26 @@
         <!-- Demo Section -->
         <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-6 mb-16">
             <h2 class="text-2xl font-bold text-orange-600 mb-4">Try it out!</h2>
+
+            <!-- Examples Section -->
+            <div class="mb-6">
+                <p class="text-orange-800 mb-3">Quick examples:</p>
+                <div class="space-y-2">
+                    <button onclick="setExample('https://r.jina.ai/firecrawl.dev/blog', '1M')"
+                        class="w-full text-left p-2 hover:bg-orange-50 rounded transition-colors">
+                        🔥 FireCrawl Blog (1 month cache)
+                    </button>
+                    <button onclick="setExample('https://r.jina.ai/jina.ai/news', '1d')"
+                        class="w-full text-left p-2 hover:bg-orange-50 rounded transition-colors">
+                        📰 Jina News (1 day cache)
+                    </button>
+                    <button onclick="setExample('https://r.jina.ai/www.tacomundo.com/menu', '1w')"
+                        class="w-full text-left p-2 hover:bg-orange-50 rounded transition-colors">
+                        🌮 Taco Mundo Menu (1 week cache)
+                    </button>
+                </div>
+            </div>
+
             <div class="space-y-4">
                 <div class="flex flex-col md:flex-row gap-4">
                     <input type="url" id="urlInput" placeholder="Enter your URL"
@@ -96,6 +116,10 @@
                                 class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
                                 Copy
                             </button>
+                            <button onclick="visitUrl()"
+                                class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                                Visit
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -108,8 +132,7 @@
                 class="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
                 <h3 class="text-xl font-bold text-orange-600 mb-3">⚡️ Lightning Fast</h3>
                 <p class="text-orange-800">Load your content in milliseconds instead of seconds. E.g. first load: 5s,
-                    after
-                    that: ±10ms for as long as you cache!</p>
+                    after that: ±10ms for as long as you cache!</p>
             </div>
             <div
                 class="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
@@ -121,6 +144,12 @@
     </div>
 
     <script>
+        function setExample(url, maxAge) {
+            document.getElementById('urlInput').value = url;
+            document.getElementById('maxAge').value = maxAge;
+            generateUrl();
+        }
+
         function generateUrl() {
             const url = document.getElementById('urlInput').value;
             const maxAge = document.getElementById('maxAge').value;
@@ -130,7 +159,6 @@
             document.getElementById('cachedUrl').value = cachedUrl;
             document.getElementById('result').classList.remove('hidden');
 
-            // Add shake animation to result
             const result = document.getElementById('result');
             result.classList.add('shake-animation');
             setTimeout(() => result.classList.remove('shake-animation'), 500);
@@ -141,7 +169,6 @@
             cachedUrl.select();
             document.execCommand('copy');
 
-            // Visual feedback
             const copyBtn = event.target;
             const originalText = copyBtn.textContent;
             copyBtn.textContent = 'Copied!';
@@ -153,7 +180,11 @@
             }, 1500);
         }
 
-        // Add input validation
+        function visitUrl() {
+            const cachedUrl = document.getElementById('cachedUrl').value;
+            window.open(cachedUrl, '_blank');
+        }
+
         document.getElementById('urlInput').addEventListener('input', (e) => {
             const input = e.target;
             const url = input.value;
