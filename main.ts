@@ -115,7 +115,7 @@ export default {
         return new Response("Invalid URL format", { status: 400 });
       }
 
-      const targetUrl = prependProtocol(pathParts.join("/"));
+      const targetUrl = prependProtocol(pathParts.join("/")) + url.search;
       const afterParam = url.searchParams.get("after");
 
       try {
