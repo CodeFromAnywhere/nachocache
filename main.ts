@@ -1,3 +1,25 @@
+/**
+ * Hashes a string and returns alphanumeric characters (A-Z, a-z, 0-9)
+ * with relatively uniform distribution
+ */
+export async function hashString(str: string): Promise<string> {
+  const buffer = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+  // Define our character set
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  // Map each byte to a character in our charset
+  return hashArray
+    .map((byte) => {
+      // Use modulo to map the byte to our charset length
+      const index = byte % charset.length;
+      return charset[index];
+    })
+    .join("");
+}
 interface Env {
   cache: KVNamespace;
 }
@@ -85,7 +107,9 @@ async function fetchAndCache(
     };
 
     const expirationTtl = duration === Infinity ? undefined : duration;
-    await env.cache.put(url, data, {
+    const key = await hashString(url);
+
+    await env.cache.put(key, data, {
       expirationTtl,
       metadata: JSON.stringify(metadata),
     });
@@ -98,7 +122,8 @@ async function getCachedResponse(
   url: string,
   env: Env,
 ): Promise<Response | null> {
-  const cached = await env.cache.getWithMetadata(url, "arrayBuffer");
+  const key = await hashString(url);
+  const cached = await env.cache.getWithMetadata(key, "arrayBuffer");
   if (!cached?.value) return null;
 
   const metadata = JSON.parse(cached.metadata as string);
@@ -151,7 +176,9 @@ export default {
         return new Response(error.message, { status: 400 });
       }
     } catch (error: any) {
-      return new Response("Internal Server Error", { status: 500 });
+      return new Response("Internal Server Error: " + error.message, {
+        status: 500,
+      });
     }
   },
 };
